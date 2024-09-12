@@ -5,7 +5,7 @@ import '../config/config.dart';
 class AuthService {
   Future<String> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('${Config.apiUrl}/api/login'),
+      Uri.parse('${Config.apiUrl}/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -17,6 +17,10 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      // Debug
+      print('Response: $responseBody');
+
       return responseBody['access_token'];
     } else {
       throw Exception('Failed to login');
@@ -30,7 +34,7 @@ class AuthService {
     String passwordConfirmation,
   ) async {
     final response = await http.post(
-      Uri.parse('${Config.apiUrl}/api/register'),
+      Uri.parse('${Config.apiUrl}/register'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -44,6 +48,10 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      // Debug
+      print('Response: $responseBody');
+
       return responseBody['access_token'];
     } else {
       throw Exception('Failed to register');

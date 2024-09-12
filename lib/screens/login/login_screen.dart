@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_controller.dart';
+import '../home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -32,6 +33,10 @@ class LoginScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 controller.login();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                );
               },
               child: const Text('Login'),
             ),

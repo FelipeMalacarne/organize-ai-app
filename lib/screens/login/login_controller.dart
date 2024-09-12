@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/auth_service.dart';
 
 class LoginController with ChangeNotifier {
@@ -23,7 +24,12 @@ class LoginController with ChangeNotifier {
       final email = emailController.text;
       final password = passwordController.text;
 
-      await authService.login(email, password);
+      final token = await authService.login(email, password);
+      if (token.isNotEmpty) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('organize_ai_token', token);
+        notifyListeners();
+      }
     } catch (error) {
       _errorMessage = 'Login failed: ${error.toString()}';
     } finally {
