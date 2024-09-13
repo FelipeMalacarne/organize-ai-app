@@ -51,4 +51,13 @@ class AuthService {
       throw Exception('Failed to register');
     }
   }
+
+  Future<void> logout() async {
+    await http.post(
+      Uri.parse('${Config.apiUrl}/logout'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+    );
+  }
 }

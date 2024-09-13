@@ -7,8 +7,7 @@ class RegisterController with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmationController =
-      TextEditingController();
+  final TextEditingController passwordConfirmationController = TextEditingController();
 
   bool _isLoading = false;
   String _errorMessage = '';
