@@ -1,7 +1,7 @@
+import 'login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'login_controller.dart';
-import '../home_screen.dart';
+import 'package:organize_ai_app/screens/home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

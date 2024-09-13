@@ -36,6 +36,22 @@ class LoginController with ChangeNotifier {
     }
   }
 
+  Future<void> logout() async {
+    _isLoading = true;
+    _errorMessage = '';
+    notifyListeners();
+
+    try {
+      await authService.logout();
+      await SecureStorageService().delete();
+    } catch (error) {
+      _errorMessage = 'Logout failed: ${error.toString()}';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   @override
   void dispose() {
     emailController.dispose();
