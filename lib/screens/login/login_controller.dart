@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../services/auth_service.dart';
+import 'package:organize_ai_app/services/auth_service.dart';
+import 'package:organize_ai_app/services/secure_storage_service.dart';
 
 class LoginController with ChangeNotifier {
   final AuthService authService;
@@ -23,9 +24,28 @@ class LoginController with ChangeNotifier {
       final email = emailController.text;
       final password = passwordController.text;
 
-      await authService.login(email, password);
+      final token = await authService.login(email, password);
+      if (token.isNotEmpty) {
+        await SecureStorageService().save(token);
+      }
     } catch (error) {
       _errorMessage = 'Login failed: ${error.toString()}';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> logout() async {
+    _isLoading = true;
+    _errorMessage = '';
+    notifyListeners();
+
+    try {
+      await authService.logout();
+      await SecureStorageService().delete();
+    } catch (error) {
+      _errorMessage = 'Logout failed: ${error.toString()}';
     } finally {
       _isLoading = false;
       notifyListeners();

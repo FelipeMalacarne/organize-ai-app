@@ -1,11 +1,11 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../config/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   Future<String> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('${Config.apiUrl}/api/login'),
+      Uri.parse('${Config.apiUrl}/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -17,6 +17,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
       return responseBody['access_token'];
     } else {
       throw Exception('Failed to login');
@@ -30,7 +31,7 @@ class AuthService {
     String passwordConfirmation,
   ) async {
     final response = await http.post(
-      Uri.parse('${Config.apiUrl}/api/register'),
+      Uri.parse('${Config.apiUrl}/register'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -44,9 +45,19 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
       return responseBody['access_token'];
     } else {
       throw Exception('Failed to register');
     }
+  }
+
+  Future<void> logout() async {
+    await http.post(
+      Uri.parse('${Config.apiUrl}/logout'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+    );
   }
 }
