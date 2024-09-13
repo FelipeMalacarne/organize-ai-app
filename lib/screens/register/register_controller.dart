@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/services/auth_service.dart';
+import 'package:organize_ai_app/services/secure_storage_service.dart';
 
 class RegisterController with ChangeNotifier {
   final AuthService authService;
@@ -32,7 +33,11 @@ class RegisterController with ChangeNotifier {
         throw 'Passwords do not match';
       }
 
-      await authService.register(name, email, password, passwordConfirmation);
+      final token = await authService.register(
+          name, email, password, passwordConfirmation);
+      if (token.isNotEmpty) {
+        await SecureStorageService().save(token);
+      }
     } catch (error) {
       _errorMessage = 'Registration failed: ${error.toString()}';
     } finally {

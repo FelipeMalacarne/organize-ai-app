@@ -1,6 +1,6 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../config/config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   Future<String> login(String email, String password) async {
@@ -17,9 +17,6 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
-
-      // Debug
-      print('Response: $responseBody');
 
       return responseBody['access_token'];
     } else {
@@ -48,9 +45,6 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
-
-      // Debug
-      print('Response: $responseBody');
 
       return responseBody['access_token'];
     } else {
