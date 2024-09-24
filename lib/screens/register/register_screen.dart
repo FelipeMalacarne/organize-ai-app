@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organize_ai_app/components/buttons/default_button.dart';
 import 'package:organize_ai_app/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:organize_ai_app/screens/register/register_controller.dart';
@@ -48,7 +49,8 @@ class RegisterScreen extends StatelessWidget {
               obscureText: true,
             ),
             const SizedBox(height: 25),
-            ElevatedButton(
+            DefaultButton(
+              text: 'Registrar',
               onPressed: () async {
                 await controller.register();
 
@@ -59,7 +61,6 @@ class RegisterScreen extends StatelessWidget {
                   );
                 }
               },
-              child: const Text('Registrar'),
             ),
             const SizedBox(height: 25),
             if (controller.isLoading) const CircularProgressIndicator(),
