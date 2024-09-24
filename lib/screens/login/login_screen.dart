@@ -40,12 +40,15 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 30),
             DefaultButton(
               text: 'Login',
-              onPressed: () {
-                controller.login();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
+              onPressed: () async {
+                await controller.login();
+
+                if (controller.errorMessage.isEmpty && context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                }
               },
             ),
             const SizedBox(height: 30),
@@ -58,10 +61,10 @@ class LoginScreen extends StatelessWidget {
                         builder: (context) => const RegisterScreen()),
                   );
                 }),
+            const SizedBox(height: 25),
             if (controller.isLoading) const CircularProgressIndicator(),
             if (controller.errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
+              SizedBox(
                 child: Text(
                   controller.errorMessage,
                   style: const TextStyle(color: Colors.red),

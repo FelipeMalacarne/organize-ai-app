@@ -49,19 +49,22 @@ class RegisterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             ElevatedButton(
-              onPressed: () {
-                controller.register();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
+              onPressed: () async {
+                await controller.register();
+
+                if (controller.errorMessage.isEmpty && context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                }
               },
               child: const Text('Registrar'),
             ),
+            const SizedBox(height: 25),
             if (controller.isLoading) const CircularProgressIndicator(),
             if (controller.errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
+              SizedBox(
                 child: Text(
                   controller.errorMessage,
                   style: const TextStyle(color: Colors.red),
