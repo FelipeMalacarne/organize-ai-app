@@ -7,7 +7,8 @@ class RegisterController with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmationController = TextEditingController();
+  final TextEditingController passwordConfirmationController =
+      TextEditingController();
 
   bool _isLoading = false;
   String _errorMessage = '';
@@ -29,7 +30,7 @@ class RegisterController with ChangeNotifier {
       final passwordConfirmation = passwordConfirmationController.text;
 
       if (password != passwordConfirmation) {
-        throw 'Passwords do not match';
+        throw 'As senhas não coincidem.';
       }
 
       final token = await authService.register(
@@ -38,7 +39,7 @@ class RegisterController with ChangeNotifier {
         await SecureStorageService().save(token);
       }
     } catch (error) {
-      _errorMessage = 'Registration failed: ${error.toString()}';
+      _errorMessage = 'Erro no registro: ${error.toString()}';
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -5,6 +5,7 @@ import 'package:organize_ai_app/config/light_theme.dart';
 import 'package:organize_ai_app/providers/theme_provider.dart';
 import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:organize_ai_app/screens/login/login_controller.dart';
+import 'package:organize_ai_app/screens/register/register_controller.dart';
 import 'package:organize_ai_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,9 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => LoginController(AuthService()),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RegisterController(AuthService()),
         ),
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
