@@ -8,47 +8,49 @@ class SideDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final loginController = Provider.of<LoginController>(context);
 
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
+      child: Container(
+        color: theme.colorScheme.surfaceContainerLowest,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: 110,
+              child: DrawerHeader(
+                margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                ),
+                child: const Text('Seja vem vindo!'),
+              ),
             ),
-            child: Text('Menu'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Profile'),
-            onTap: () {
-              // Handle Profile tap
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              // Handle Settings tap
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () async {
-              await loginController.logout();
+            const SizedBox(height: 10),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                await loginController.logout();
 
-              if (loginController.errorMessage.isEmpty && context.mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              }
-            },
-          ),
-        ],
+                if (loginController.errorMessage.isEmpty && context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

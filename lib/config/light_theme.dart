@@ -9,7 +9,8 @@ class AppLightTheme {
   static Color secondaryColor = flavor.lavender;
 
   static Color backgroundColor = flavor.mantle;
-  static Color secondaryBackgroundColor = flavor.crust;
+  static Color highestBackgroundColor = flavor.surface0;
+  static Color lowestBackgroundColor = flavor.crust;
 
   static Color textColor = flavor.text;
   static Color buttonTextColor = flavor.crust;
@@ -33,7 +34,7 @@ class AppLightTheme {
   /// DECORATIONS
   static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     filled: true,
-    fillColor: secondaryBackgroundColor,
+    fillColor: lowestBackgroundColor,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
     ),
@@ -72,6 +73,9 @@ class AppLightTheme {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: backgroundColor,
+        surfaceContainerHighest: highestBackgroundColor,
+        surfaceContainerLowest: lowestBackgroundColor,
+        error: errorColor,
       ),
       elevatedButtonTheme: elevatedButtonThemeData,
       inputDecorationTheme: inputDecorationTheme,

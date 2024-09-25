@@ -7,9 +7,10 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AppBar(
-      backgroundColor: Colors.blueGrey,
-      title: const Text("Home"),
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
       actions: [
         IconButton(
           onPressed: onProfileTap,
