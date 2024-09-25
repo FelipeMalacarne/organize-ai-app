@@ -62,6 +62,11 @@ class AppDarkTheme {
     ),
   );
 
+  static DrawerThemeData drawerThemeData = DrawerThemeData(
+    elevation: 0,
+    backgroundColor: backgroundColor,
+  );
+
   /// THEME
   static ThemeData get themeData {
     return ThemeData(
