@@ -1,6 +1,9 @@
-import 'login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:organize_ai_app/components/buttons/link_button.dart';
+import 'package:organize_ai_app/screens/register/register_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:organize_ai_app/components/buttons/default_button.dart';
+import 'package:organize_ai_app/screens/login/login_controller.dart';
 import 'package:organize_ai_app/screens/home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -11,39 +14,57 @@ class LoginScreen extends StatelessWidget {
     final controller = Provider.of<LoginController>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Padding(
+        body: Center(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: controller.emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
+            SizedBox(
+              width: 450.0,
+              child: TextField(
+                controller: controller.emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
             ),
-            TextField(
-              controller: controller.passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 450.0,
+              child: TextField(
+                controller: controller.passwordController,
+                decoration: const InputDecoration(labelText: 'Senha'),
+                obscureText: true,
+              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                controller.login();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
+            const SizedBox(height: 30),
+            DefaultButton(
+              text: 'Login',
+              onPressed: () async {
+                await controller.login();
+
+                if (controller.errorMessage.isEmpty && context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                }
               },
-              child: const Text('Login'),
             ),
+            const SizedBox(height: 30),
+            LinkButton(
+                text: 'Ainda não está cadastrado? Cadastre-se aqui.',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen()),
+                  );
+                }),
+            const SizedBox(height: 30),
             if (controller.isLoading) const CircularProgressIndicator(),
             if (controller.errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
+              SizedBox(
                 child: Text(
                   controller.errorMessage,
                   style: const TextStyle(color: Colors.red),
@@ -52,6 +73,6 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
