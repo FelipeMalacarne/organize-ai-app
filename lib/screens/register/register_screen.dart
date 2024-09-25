@@ -48,7 +48,7 @@ class RegisterScreen extends StatelessWidget {
                   const InputDecoration(labelText: 'Confirmação de Senha'),
               obscureText: true,
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
             DefaultButton(
               text: 'Registrar',
               onPressed: () async {
@@ -62,7 +62,7 @@ class RegisterScreen extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
             if (controller.isLoading) const CircularProgressIndicator(),
             if (controller.errorMessage.isNotEmpty)
               SizedBox(

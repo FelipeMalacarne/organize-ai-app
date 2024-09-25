@@ -1,23 +1,31 @@
+import 'package:catppuccin_flutter/catppuccin_flutter.dart';
 import 'package:flutter/material.dart';
 
 class AppLightTheme {
+  static Flavor flavor = catppuccin.latte;
+
   /// COLOR DECLARATION
-  static const Color primaryColor = Color.fromARGB(255, 29, 104, 209);
-  static const Color secondaryColor = Color(0xFF00BCD4);
+  static Color primaryColor = flavor.mauve;
+  static Color secondaryColor = flavor.lavender;
 
-  static const Color backgroundColor = Color.fromARGB(255, 228, 228, 228);
+  static Color backgroundColor = flavor.mantle;
+  static Color secondaryBackgroundColor = flavor.crust;
 
-  static const Color textColor = Color(0xFF212121);
-  static const Color buttonTextColor = Color.fromARGB(255, 226, 226, 226);
+  static Color textColor = flavor.text;
+  static Color buttonTextColor = flavor.crust;
+
+  static Color textFieldContourColor = flavor.surface2;
+
+  static Color errorColor = flavor.red;
 
   /// STYLES
-  static const TextStyle buttonTextStyle = TextStyle(
+  static TextStyle buttonTextStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: buttonTextColor,
   );
 
-  static const TextStyle inputTextStyle = TextStyle(
+  static TextStyle inputTextStyle = TextStyle(
     fontSize: 16,
     color: textColor,
   );
@@ -25,13 +33,13 @@ class AppLightTheme {
   /// DECORATIONS
   static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     filled: true,
-    fillColor: Colors.white,
+    fillColor: secondaryBackgroundColor,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
-      borderSide: const BorderSide(color: primaryColor, width: 2.0),
+      borderSide: BorderSide(color: primaryColor, width: 2.0),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
@@ -67,7 +75,7 @@ class AppLightTheme {
       ),
       elevatedButtonTheme: elevatedButtonThemeData,
       inputDecorationTheme: inputDecorationTheme,
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         bodyMedium: inputTextStyle,
       ),
     );

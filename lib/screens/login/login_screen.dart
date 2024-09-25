@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                         builder: (context) => const RegisterScreen()),
                   );
                 }),
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
             if (controller.isLoading) const CircularProgressIndicator(),
             if (controller.errorMessage.isNotEmpty)
               SizedBox(
