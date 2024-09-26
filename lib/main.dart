@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:organize_ai_app/config/dark_theme.dart';
 import 'package:organize_ai_app/config/light_theme.dart';
 import 'package:organize_ai_app/providers/theme_provider.dart';
+import 'package:organize_ai_app/screens/home_screen.dart';
 import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:organize_ai_app/screens/login/login_controller.dart';
 import 'package:organize_ai_app/screens/register/register_controller.dart';

@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
+  flutter_svg: ^1.0.3
   http: ^1.2.2
   provider: ^6.0.0
   flutter_secure_storage: ^9.0.0
@@ -28,4 +29,5 @@ flutter:
 
   assets:
     - .env
-    - assets/
+    - assets/images/
+    - assets/icons/
