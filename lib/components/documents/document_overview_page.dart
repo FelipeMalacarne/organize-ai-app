@@ -34,12 +34,23 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Documentos'),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _buildDocumentGrid(),
+          : Column(
+              children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Documentos',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                  ),
+                ),
+                Expanded(child: _buildDocumentGrid()),
+              ],
+            ),
     );
   }
 
