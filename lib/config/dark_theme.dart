@@ -9,7 +9,8 @@ class AppDarkTheme {
   static Color secondaryColor = flavor.lavender;
 
   static Color backgroundColor = flavor.mantle;
-  static Color secondaryBackgroundColor = flavor.crust;
+  static Color highestBackgroundColor = flavor.surface0;
+  static Color lowestBackgroundColor = flavor.crust;
 
   static Color textColor = flavor.text;
   static Color buttonTextColor = flavor.crust;
@@ -33,7 +34,7 @@ class AppDarkTheme {
   /// DECORATIONS
   static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
     filled: true,
-    fillColor: secondaryBackgroundColor,
+    fillColor: lowestBackgroundColor,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8.0),
     ),
@@ -62,6 +63,11 @@ class AppDarkTheme {
     ),
   );
 
+  static DrawerThemeData drawerThemeData = DrawerThemeData(
+    elevation: 0,
+    backgroundColor: backgroundColor,
+  );
+
   /// THEME
   static ThemeData get themeData {
     return ThemeData(
@@ -73,6 +79,9 @@ class AppDarkTheme {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: backgroundColor,
+        surfaceContainerHighest: highestBackgroundColor,
+        surfaceContainerLowest: lowestBackgroundColor,
+        error: errorColor,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

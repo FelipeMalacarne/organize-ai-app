@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:organize_ai_app/screens/login/login_controller.dart';
-import 'package:organize_ai_app/screens/login/login_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:organize_ai_app/components/documents/document_overview_page.dart';
+import 'package:organize_ai_app/components/top_bar/side_drawer.dart';
+import 'package:organize_ai_app/components/top_bar/top_bar.dart';
+import 'package:organize_ai_app/mixins/requires_token.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget with RequiresToken {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<LoginController>(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            controller.logout();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-            );
+        appBar: TopBar(
+          onProfileTap: () {
+            Scaffold.of(context).openDrawer();
           },
-          child: const Text('Login'),
         ),
-      ),
-    );
+        drawer: const SideDrawer(),
+        body: const DocumentOverviewPage());
   }
 }
