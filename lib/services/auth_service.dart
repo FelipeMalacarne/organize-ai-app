@@ -1,6 +1,6 @@
-import '../config/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:organize_ai_app/config/config.dart';
 
 class AuthService {
   Future<String> login(String email, String password) async {
