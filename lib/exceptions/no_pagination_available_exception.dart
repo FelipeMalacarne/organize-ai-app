@@ -3,5 +3,5 @@ class NoPaginationAvailableException implements Exception {
   NoPaginationAvailableException(this.message);
 
   @override
-  String toString() => 'TokenExpiredException: $message';
+  String toString() => 'NoPaginationAvailableException: $message';
 }

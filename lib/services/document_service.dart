@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:organize_ai_app/config/config.dart';
-import 'package:organize_ai_app/excetions/no_pagination_available_exception.dart';
-import 'package:organize_ai_app/excetions/token_invalid_exception.dart';
+import 'package:organize_ai_app/exceptions/no_pagination_available_exception.dart';
+import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
 import 'package:organize_ai_app/inputs/document_input.dart';
 import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/mixins/requires_token.dart';
@@ -132,7 +132,7 @@ class DocumentService with RequiresToken {
     }
   }
 
-  Future<Document> update(UpdateDocumentInput input, String id) async {
+  Future<Document> update(String id, UpdateDocumentInput input) async {
     final token = await getToken();
     if (token == null) {
       throw TokenExpiredException('Token expired');
