@@ -48,7 +48,7 @@ class DocumentTileState extends State<DocumentTile> {
     return GestureDetector(
       onTap: _handleTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         color: _tapped
             ? theme.colorScheme.surfaceContainerLowest
             : theme.colorScheme.surface,

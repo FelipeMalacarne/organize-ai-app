@@ -18,6 +18,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   catppuccin_flutter: ^1.0.0
   path: ^1.8.0
+  file_picker: ^5.2.2
 
 dev_dependencies:
   flutter_test:
