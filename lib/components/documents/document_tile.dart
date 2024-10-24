@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class DocumentTile extends StatefulWidget {
   final Map<String, String> document;
@@ -29,20 +28,36 @@ class DocumentTileState extends State<DocumentTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    String? icon;
+
+    Icon? icon;
+    double iconSize = 60.0;
+    Color iconColor = theme.colorScheme.surfaceContainerHighest;
 
     switch (widget.document['type']) {
       case 'pdf':
-        icon = 'assets/icons/pdf.svg';
+        icon = Icon(
+          Icons.picture_as_pdf,
+          size: iconSize,
+          color: iconColor,
+        );
         break;
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'tiff':
-        icon = 'assets/icons/image.svg';
+        icon = Icon(
+          Icons.image,
+          size: iconSize,
+          color: iconColor,
+        );
         break;
       default:
-        icon = 'assets/icons/unknown.svg';
+        icon = Icon(
+          Icons.insert_drive_file,
+          size: iconSize,
+          color: iconColor,
+        );
+        break;
     }
 
     return GestureDetector(
@@ -55,14 +70,7 @@ class DocumentTileState extends State<DocumentTile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              icon,
-              width: 60,
-              height: 60,
-              color: theme.colorScheme.surfaceContainerHighest,
-              placeholderBuilder: (context) =>
-                  const CircularProgressIndicator(),
-            ),
+            icon,
             const SizedBox(height: 20),
             Text(widget.document['name']!,
                 style: const TextStyle(fontSize: 16)),
