@@ -3,10 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:organize_ai_app/config/dark_theme.dart';
 import 'package:organize_ai_app/config/light_theme.dart';
 import 'package:organize_ai_app/providers/theme_provider.dart';
-import 'package:organize_ai_app/screens/home_screen.dart';
+import 'package:organize_ai_app/screens/auth/content_screen.dart';
+import 'package:organize_ai_app/screens/auth/user_controller.dart';
 import 'package:organize_ai_app/screens/login/login_controller.dart';
 import 'package:organize_ai_app/screens/register/register_controller.dart';
 import 'package:organize_ai_app/services/auth_service.dart';
+import 'package:organize_ai_app/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -33,6 +35,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(),
         ),
+        ChangeNotifierProvider(create: (_) => UserController(UserService())),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
@@ -40,8 +43,7 @@ class App extends StatelessWidget {
             theme: AppLightTheme.themeData,
             darkTheme: AppDarkTheme.themeData,
             themeMode: themeProvider.themeMode,
-            // home: const LoginScreen(),
-            home: const HomeScreen(),
+            home: const AuthScreen(),
           );
         },
       ),

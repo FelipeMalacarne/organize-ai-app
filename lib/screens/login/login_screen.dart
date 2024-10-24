@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/link_button.dart';
+import 'package:organize_ai_app/models/user.dart';
+import 'package:organize_ai_app/screens/auth/user_controller.dart';
 import 'package:organize_ai_app/screens/register/register_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
@@ -11,7 +13,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<LoginController>(context);
+    final loginController = Provider.of<LoginController>(context);
+    final userController = Provider.of<UserController>(context);
 
     return Scaffold(
         body: Center(
@@ -23,7 +26,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(
               width: 450.0,
               child: TextField(
-                controller: controller.emailController,
+                controller: loginController.emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -32,7 +35,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(
               width: 450.0,
               child: TextField(
-                controller: controller.passwordController,
+                controller: loginController.passwordController,
                 decoration: const InputDecoration(labelText: 'Senha'),
                 obscureText: true,
               ),
@@ -41,13 +44,20 @@ class LoginScreen extends StatelessWidget {
             DefaultButton(
               text: 'Login',
               onPressed: () async {
-                await controller.login();
+                await loginController.login();
 
-                if (controller.errorMessage.isEmpty && context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                if (loginController.errorMessage.isEmpty) {
+                  User user = await userController.getCurrentUser();
+
+                  if (context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                                user: user,
+                              )),
+                    );
+                  }
                 }
               },
             ),
@@ -62,11 +72,11 @@ class LoginScreen extends StatelessWidget {
                   );
                 }),
             const SizedBox(height: 30),
-            if (controller.isLoading) const CircularProgressIndicator(),
-            if (controller.errorMessage.isNotEmpty)
+            if (loginController.isLoading) const CircularProgressIndicator(),
+            if (loginController.errorMessage.isNotEmpty)
               SizedBox(
                 child: Text(
-                  controller.errorMessage,
+                  loginController.errorMessage,
                   style: const TextStyle(color: Colors.red),
                 ),
               ),

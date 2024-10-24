@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
+import 'package:organize_ai_app/models/user.dart';
+import 'package:organize_ai_app/screens/auth/user_controller.dart';
 import 'package:organize_ai_app/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:organize_ai_app/screens/register/register_controller.dart';
@@ -9,7 +11,9 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<RegisterController>(context);
+    final RegisterController registerController =
+        Provider.of<RegisterController>(context);
+    final UserController userController = Provider.of<UserController>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,24 +30,24 @@ class RegisterScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(
-              controller: controller.nameController,
+              controller: registerController.nameController,
               decoration: const InputDecoration(labelText: 'Nome'),
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: controller.emailController,
+              controller: registerController.emailController,
               decoration: const InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: controller.passwordController,
+              controller: registerController.passwordController,
               decoration: const InputDecoration(labelText: 'Senha'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: controller.passwordConfirmationController,
+              controller: registerController.passwordConfirmationController,
               decoration:
                   const InputDecoration(labelText: 'Confirmação de Senha'),
               obscureText: true,
@@ -52,22 +56,29 @@ class RegisterScreen extends StatelessWidget {
             DefaultButton(
               text: 'Registrar',
               onPressed: () async {
-                await controller.register();
+                await registerController.register();
 
-                if (controller.errorMessage.isEmpty && context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                if (registerController.errorMessage.isEmpty) {
+                  User user = await userController.getCurrentUser();
+
+                  if (context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                                user: user,
+                              )),
+                    );
+                  }
                 }
               },
             ),
             const SizedBox(height: 30),
-            if (controller.isLoading) const CircularProgressIndicator(),
-            if (controller.errorMessage.isNotEmpty)
+            if (registerController.isLoading) const CircularProgressIndicator(),
+            if (registerController.errorMessage.isNotEmpty)
               SizedBox(
                 child: Text(
-                  controller.errorMessage,
+                  registerController.errorMessage,
                   style: const TextStyle(color: Colors.red),
                 ),
               ),

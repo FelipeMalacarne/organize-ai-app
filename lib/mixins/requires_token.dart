@@ -4,4 +4,12 @@ mixin RequiresToken {
   Future<String?> getToken() async {
     return await SecureStorageService().read();
   }
+
+  Future<void> setToken(String token) async {
+    await SecureStorageService().save(token);
+  }
+
+  Future<void> deleteToken() async {
+    await SecureStorageService().delete();
+  }
 }
