@@ -3,6 +3,7 @@ import 'package:organize_ai_app/inputs/document_input.dart';
 import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/document_pagination.dart';
+import 'package:organize_ai_app/models/tag.dart';
 import 'package:organize_ai_app/services/document_service.dart';
 
 class DocumentController with ChangeNotifier {
@@ -78,7 +79,7 @@ class DocumentController with ChangeNotifier {
   }
 
   Future<Document> createDocument(
-      String title, List<String> tags, String filePath) async {
+      String title, List<Tag> tags, String filePath) async {
     final documentInput = DocumentInput(
       title: title,
       tags: tags,

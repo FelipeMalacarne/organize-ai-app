@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:organize_ai_app/components/documents/document_details_dialog.dart';
 import 'package:organize_ai_app/models/document.dart';
+import 'package:organize_ai_app/screens/document/document_controller.dart';
 
 class DocumentTile extends StatefulWidget {
-  final Document document;
+  Document document;
 
-  const DocumentTile({super.key, required this.document});
+  late DocumentController documentController;
+
+  DocumentTile({super.key, required this.document});
 
   @override
   DocumentTileState createState() => DocumentTileState();
@@ -23,8 +27,45 @@ class DocumentTileState extends State<DocumentTile> {
       setState(() {
         _tapped = false;
       });
+      _showDocumentDialog(context);
     });
   }
+
+  void _showDocumentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DocumentDetailsDialog(
+          document: widget.document,
+          onSubmit: (updatedTitle, updatedTags) {
+            setState(() {
+              widget.document.title = updatedTitle;
+              widget.document.tags = updatedTags;
+            });
+          },
+        );
+      },
+    );
+  }
+
+  // Future<Document> _updateDocument(String title, List<String> tags) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+
+  //   try {
+  //     return await documentController.createDocument(title, tags, filePath);
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to create document: $e')),
+  //     );
+  //     rethrow;
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

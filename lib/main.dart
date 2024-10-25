@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:organize_ai_app/components/documents/document_controller.dart';
+import 'package:organize_ai_app/components/tags/tag_controller.dart';
 import 'package:organize_ai_app/config/dark_theme.dart';
 import 'package:organize_ai_app/config/light_theme.dart';
 import 'package:organize_ai_app/providers/theme_provider.dart';
@@ -10,6 +11,7 @@ import 'package:organize_ai_app/screens/login/login_controller.dart';
 import 'package:organize_ai_app/screens/register/register_controller.dart';
 import 'package:organize_ai_app/services/auth_service.dart';
 import 'package:organize_ai_app/services/document_service.dart';
+import 'package:organize_ai_app/services/tag_service.dart';
 import 'package:organize_ai_app/services/user_service.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +42,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserController(UserService())),
         ChangeNotifierProvider(
             create: (_) => DocumentController(DocumentService())),
+        ChangeNotifierProvider(create: (_) => TagController(TagService())),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

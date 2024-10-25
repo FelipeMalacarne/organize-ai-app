@@ -2,9 +2,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
 import 'package:organize_ai_app/components/buttons/destructive_button.dart';
+import 'package:organize_ai_app/components/tags/tag_controller.dart';
+import 'package:organize_ai_app/components/tags/tag_selector.dart';
+import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
+import 'package:organize_ai_app/models/tag.dart';
+import 'package:organize_ai_app/models/tag_pagination.dart';
+import 'package:organize_ai_app/screens/login/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class DocumentCreationForm extends StatefulWidget {
-  final Function(String, List<String>, String?) onSubmit;
+  final Function(String, List<Tag>, String?) onSubmit;
 
   const DocumentCreationForm({super.key, required this.onSubmit});
 
@@ -13,18 +20,50 @@ class DocumentCreationForm extends StatefulWidget {
 }
 
 class DocumentCreationFormState extends State<DocumentCreationForm> {
-  final TextEditingController _textController = TextEditingController();
-  final List<String> _selectedTags = [];
-  final List<String> _availableTags = [
-    'Work',
-    'Personal',
-    'Fronks',
-    'Flenks',
-    'Flonks',
-    'Splenks',
-    'Splonks',
-  ]; // TODO: Fetch from API
+  bool _isLoading = true;
+
+  late TagController tagController;
+  late List<Tag> _selectedTags = [];
+  late List<Tag> _availableTags = [];
   String? _selectedFilePath;
+
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    tagController = Provider.of<TagController>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchTags();
+    });
+  }
+
+  Future<void> _fetchTags() async {
+    try {
+      TagPagination tagPagination = await tagController.getTags();
+
+      if (!mounted) return;
+
+      setState(() {
+        _availableTags = tagPagination.data;
+        _selectedTags = [];
+      });
+    } catch (error) {
+      if (error is TokenExpiredException) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erro ao buscar tags: $error')));
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -52,23 +91,19 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
                   const InputDecoration(labelText: 'Enter document title'),
             ),
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 8.0,
-              children: _availableTags.map((tag) {
-                return ChoiceChip(
-                  label: Text(tag),
-                  selected: _selectedTags.contains(tag),
-                  onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        _selectedTags.add(tag);
-                      } else {
-                        _selectedTags.remove(tag);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
+            TagsSelector(
+              isLoading: _isLoading,
+              availableTags: _availableTags,
+              selectedTags: _selectedTags,
+              onTagSelected: (tag) {
+                setState(() {
+                  if (_selectedTags.contains(tag)) {
+                    _selectedTags.remove(tag);
+                  } else {
+                    _selectedTags.add(tag);
+                  }
+                });
+              },
             ),
             const SizedBox(height: 16),
             Row(

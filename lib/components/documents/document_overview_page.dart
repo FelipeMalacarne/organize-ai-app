@@ -7,6 +7,7 @@ import 'package:organize_ai_app/components/documents/document_grid.dart';
 import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/document_pagination.dart';
+import 'package:organize_ai_app/models/tag.dart';
 import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -80,24 +81,21 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
   }
 
   Future<Document> _createDocument(
-      String title, List<String> tags, String filePath) async {
+      String title, List<Tag> tags, String filePath) async {
     setState(() {
-      _isLoading = true; // Show loading indicator
+      _isLoading = true;
     });
 
     try {
-      Document createdDocument =
-          await documentController.createDocument(title, tags, filePath);
-      return createdDocument;
+      return await documentController.createDocument(title, tags, filePath);
     } catch (e) {
-      // Handle any errors, e.g., showing a Snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create document: $e')),
       );
       rethrow;
     } finally {
       setState(() {
-        _isLoading = false; // Stop loading indicator
+        _isLoading = false;
       });
     }
   }
@@ -119,8 +117,8 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
       context: context,
       builder: (BuildContext context) {
         return DocumentCreationForm(
-          onSubmit: (String documentTitle, List<String> tags,
-              String? filePath) async {
+          onSubmit:
+              (String documentTitle, List<Tag> tags, String? filePath) async {
             if (filePath != null) {
               Document document =
                   await _createDocument(documentTitle, tags, filePath);
