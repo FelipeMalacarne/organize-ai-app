@@ -79,6 +79,61 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
     }
   }
 
+  Future<Document> _createDocument(
+      String title, List<String> tags, String filePath) async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+
+    try {
+      Document createdDocument =
+          await documentController.createDocument(title, tags, filePath);
+      return createdDocument;
+    } catch (e) {
+      // Handle any errors, e.g., showing a Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create document: $e')),
+      );
+      rethrow;
+    } finally {
+      setState(() {
+        _isLoading = false; // Stop loading indicator
+      });
+    }
+  }
+
+  void _handleTap() {
+    setState(() {
+      _createDocumentButtonTapped = true;
+    });
+
+    Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _createDocumentButtonTapped = false;
+      });
+    });
+  }
+
+  void _showForm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DocumentCreationForm(
+          onSubmit: (String documentTitle, List<String> tags,
+              String? filePath) async {
+            if (filePath != null) {
+              Document document =
+                  await _createDocument(documentTitle, tags, filePath);
+              setState(() {
+                documents.insert(0, document);
+              });
+            }
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -128,34 +183,6 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
           ),
         ],
       ),
-    );
-  }
-
-  void _handleTap() {
-    setState(() {
-      _createDocumentButtonTapped = true;
-    });
-
-    Timer(const Duration(milliseconds: 300), () {
-      setState(() {
-        _createDocumentButtonTapped = false;
-      });
-    });
-  }
-
-  void _showForm() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DocumentCreationForm(
-          onSubmit:
-              (String documentTitle, List<String> tags, String? description) {
-            setState(() {
-              // TODO: Add the created doc with title, tags, and description
-            });
-          },
-        );
-      },
     );
   }
 }

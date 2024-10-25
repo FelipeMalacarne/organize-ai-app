@@ -26,8 +26,6 @@ class DocumentService with RequiresToken {
           'Authorization': 'Bearer $token'
         });
 
-    print(response.body);
-
     if (response.statusCode == 200) {
       return DocumentPagination.fromJson(json.decode(response.body));
     } else if (response.statusCode == 401) {
@@ -134,13 +132,18 @@ class DocumentService with RequiresToken {
 
     var response = await request.send();
 
-    if (response.statusCode == 200) {
-      final responseBody = await response.stream.bytesToString();
-      return Document.fromJson(json.decode(responseBody));
+    final body = jsonDecode(await response.stream.bytesToString());
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return Document.fromJson(body['data']);
     } else if (response.statusCode == 401) {
       throw TokenExpiredException('Token expired');
     } else {
-      throw Exception('Failed to create document');
+      if (body['validation'] != null && body['validation']['message'] != null) {
+        throw Exception(body['validation']['message']);
+      }
+
+      throw Exception('Unknown error');
     }
   }
 

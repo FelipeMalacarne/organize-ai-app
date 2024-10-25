@@ -1,4 +1,4 @@
-import 'package:file_picker/file_picker.dart'; // Add this package in pubspec.yaml
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
 import 'package:organize_ai_app/components/buttons/destructive_button.dart';
@@ -14,6 +14,7 @@ class DocumentCreationForm extends StatefulWidget {
 
 class DocumentCreationFormState extends State<DocumentCreationForm> {
   final TextEditingController _textController = TextEditingController();
+  final List<String> _selectedTags = [];
   final List<String> _availableTags = [
     'Work',
     'Personal',
@@ -23,7 +24,6 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
     'Splenks',
     'Splonks',
   ]; // TODO: Fetch from API
-  final List<String> _selectedTags = [];
   String? _selectedFilePath;
 
   Future<void> _pickFile() async {

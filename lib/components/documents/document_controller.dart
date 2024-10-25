@@ -77,7 +77,7 @@ class DocumentController with ChangeNotifier {
     }
   }
 
-  Future<void> createDocument(
+  Future<Document> createDocument(
       String title, List<String> tags, String filePath) async {
     final documentInput = DocumentInput(
       title: title,
@@ -90,7 +90,7 @@ class DocumentController with ChangeNotifier {
     notifyListeners();
 
     try {
-      await documentService.create(documentInput);
+      return await documentService.create(documentInput);
     } catch (error) {
       rethrow;
     } finally {

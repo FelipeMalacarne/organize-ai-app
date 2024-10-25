@@ -14,9 +14,14 @@ class DocumentInput {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> json = {
       'title': title,
-      'tags': tags,
     };
+
+    for (int i = 0; i < tags.length; i++) {
+      json['tags[$i]'] = tags[i];
+    }
+
+    return json;
   }
 }
