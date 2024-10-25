@@ -13,21 +13,26 @@ class DocumentPagination {
 
   DocumentPagination({
     required this.data,
-    this.firstPageUrl,
-    this.lastPageUrl,
-    this.prevPageUrl,
-    this.nextPageUrl,
+    required this.firstPageUrl,
+    required this.lastPageUrl,
+    required this.prevPageUrl,
+    required this.nextPageUrl,
     required this.currentPage,
     required this.lastPage,
   });
 
-  DocumentPagination.fromJson(Map<String, dynamic> json)
-      : data = List<Document>.from(
-            json['data'].map((document) => Document.fromJson(document))),
-        firstPageUrl = json['links']['first'],
-        lastPageUrl = json['links']['last'],
-        prevPageUrl = json['links']['prev'],
-        nextPageUrl = json['links']['next'],
-        currentPage = json['meta']['current_page'],
-        lastPage = json['meta']['last_page'];
+  factory DocumentPagination.fromJson(Map<String, dynamic> json) {
+    return DocumentPagination(
+      data: json['data'] != null
+          ? List<Document>.from(
+              json['data'].map((document) => Document.fromJson(document)))
+          : [],
+      firstPageUrl: json['links']['first'],
+      lastPageUrl: json['links']['last'],
+      prevPageUrl: json['links']['prev'],
+      nextPageUrl: json['links']['next'],
+      currentPage: json['meta']['current_page'],
+      lastPage: json['meta']['last_page'],
+    );
+  }
 }

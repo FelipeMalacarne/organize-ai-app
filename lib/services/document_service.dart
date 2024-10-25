@@ -26,6 +26,8 @@ class DocumentService with RequiresToken {
           'Authorization': 'Bearer $token'
         });
 
+    print(response.body);
+
     if (response.statusCode == 200) {
       return DocumentPagination.fromJson(json.decode(response.body));
     } else if (response.statusCode == 401) {
