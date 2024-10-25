@@ -15,8 +15,26 @@ class TagsSelector extends StatelessWidget {
     required this.isLoading,
   });
 
+  bool isTagSelected(Tag tag) {
+    return selectedTags.any((selectedTag) => selectedTag.id == tag.id);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selectedTagsList = availableTags.where(isTagSelected).toList();
+    final unselectedTagsList =
+        availableTags.where((tag) => !isTagSelected(tag)).toList();
+
+    final firstWrapTags = [
+      ...selectedTagsList.sublist(0, (selectedTagsList.length / 2).ceil()),
+      ...unselectedTagsList.sublist(0, (unselectedTagsList.length / 2).ceil())
+    ];
+
+    final secondWrapTags = [
+      ...selectedTagsList.sublist((selectedTagsList.length / 2).ceil()),
+      ...unselectedTagsList.sublist((unselectedTagsList.length / 2).ceil())
+    ];
+
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : Container(
@@ -28,10 +46,8 @@ class TagsSelector extends StatelessWidget {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: availableTags
-                        .sublist(0, (availableTags.length / 2).ceil())
-                        .map((tag) {
-                      final isSelected = selectedTags.contains(tag);
+                    children: firstWrapTags.map((tag) {
+                      final isSelected = isTagSelected(tag);
                       return ChoiceChip(
                         label: Text(tag.name),
                         selected: isSelected,
@@ -42,10 +58,8 @@ class TagsSelector extends StatelessWidget {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: availableTags
-                        .sublist((availableTags.length / 2).ceil())
-                        .map((tag) {
-                      final isSelected = selectedTags.contains(tag);
+                    children: secondWrapTags.map((tag) {
+                      final isSelected = isTagSelected(tag);
                       return ChoiceChip(
                         label: Text(tag.name),
                         selected: isSelected,

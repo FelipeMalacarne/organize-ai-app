@@ -88,7 +88,7 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
             TextField(
               controller: _textController,
               decoration:
-                  const InputDecoration(labelText: 'Enter document title'),
+                  const InputDecoration(labelText: 'Título do documento'),
             ),
             const SizedBox(height: 16),
             TagsSelector(
@@ -110,14 +110,14 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
               children: [
                 ElevatedButton(
                   onPressed: _pickFile,
-                  child: const Text('Select File'),
+                  child: const Text('Selecionar arquivo'),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     _selectedFilePath != null
                         ? _selectedFilePath!
-                        : 'No file selected',
+                        : 'Nenhum arquivo selecionado',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -131,7 +131,7 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  text: 'Cancel',
+                  text: 'Cancelar',
                 ),
                 DefaultButton(
                   onPressed: () {
@@ -142,7 +142,7 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
                     );
                     Navigator.pop(context);
                   },
-                  text: 'Submit',
+                  text: 'Criar',
                 ),
               ],
             ),

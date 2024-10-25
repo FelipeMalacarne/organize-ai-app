@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
 import 'package:organize_ai_app/components/buttons/destructive_button.dart';
+import 'package:organize_ai_app/components/tags/tag_controller.dart';
 import 'package:organize_ai_app/components/tags/tag_selector.dart';
+import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/tag.dart';
+import 'package:organize_ai_app/models/tag_pagination.dart';
+import 'package:organize_ai_app/screens/login/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class DocumentDetailsDialog extends StatefulWidget {
   final Document document;
@@ -20,23 +25,48 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
   bool _isLoading = true;
 
   late TextEditingController _titleController;
-  final List<Tag> _selectedTags = [];
-  final List<Map<String, String>> _availableTags = [
-    {"id": "tag_jPMzLHRa3f", "name": "personal"},
-    {"id": "tag_y3DZA3TguM", "name": "testefodase"},
-    {"id": "tag_random1", "name": "work"},
-    {"id": "tag_random2", "name": "urgent"},
-  ]; // TODO: Replace with tags from an API or other source.
+
+  late TagController tagController;
+  late List<Tag> _selectedTags = [];
+  late List<Tag> _availableTags = [];
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.document.title);
+    tagController = Provider.of<TagController>(context, listen: false);
 
-    // Initialize selected tags from the document's existing tags
-    // _selectedTags.addAll(widget.document.tags);
+    _selectedTags.addAll(widget.document.tags);
 
-    _isLoading = false;
+    _fetchTags();
+  }
+
+  Future<void> _fetchTags() async {
+    try {
+      TagPagination tagPagination = await tagController.getTags();
+
+      if (!mounted) return;
+
+      setState(() {
+        _availableTags = tagPagination.data;
+        _selectedTags = widget.document.tags.where((docTag) {
+          return _availableTags
+              .any((availableTag) => availableTag.id == docTag.id);
+        }).toList();
+      });
+    } catch (error) {
+      if (error is TokenExpiredException) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erro ao buscar tags: $error')));
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -70,19 +100,20 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
                         decoration: const InputDecoration(labelText: 'Título'),
                       ),
                       const SizedBox(height: 16),
-                      // TagsSelector(
-                      //   availableTags: _availableTags,
-                      //   selectedTags: _selectedTags,
-                      //   onTagSelected: (tag) {
-                      //     setState(() {
-                      //       if (_selectedTags.contains(tag)) {
-                      //         _selectedTags.remove(tag);
-                      //       } else {
-                      //         _selectedTags.add(tag);
-                      //       }
-                      //     });
-                      //   },
-                      // ),
+                      TagsSelector(
+                        isLoading: _isLoading,
+                        availableTags: _availableTags,
+                        selectedTags: _selectedTags,
+                        onTagSelected: (tag) {
+                          setState(() {
+                            if (_selectedTags.contains(tag)) {
+                              _selectedTags.remove(tag);
+                            } else {
+                              _selectedTags.add(tag);
+                            }
+                          });
+                        },
+                      ),
                       const SizedBox(height: 16),
                       Text("File Type: ${widget.document.fileType}"),
                       const SizedBox(height: 24),
