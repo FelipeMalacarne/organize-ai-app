@@ -11,7 +11,7 @@ import 'package:organize_ai_app/models/document_pagination.dart';
 import 'package:path/path.dart' as path;
 
 class DocumentService with RequiresToken {
-  String url = '${Config.apiUrl}/documents';
+  String url = '${Config.apiUrl}/document';
 
   Future<DocumentPagination> get({int limit = 20, int page = 1}) async {
     final token = await getToken();
@@ -22,6 +22,7 @@ class DocumentService with RequiresToken {
     final response = await http.get(Uri.parse('$url?limit=$limit&page=$page'),
         headers: <String, String>{
           'Content-Type': 'application',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token'
         });
 
@@ -30,7 +31,13 @@ class DocumentService with RequiresToken {
     } else if (response.statusCode == 401) {
       throw TokenExpiredException('Token expired');
     } else {
-      throw Exception('Failed to load documents');
+      var body = json.decode(response.body);
+
+      if (body['validation'] != null && body['validation']['message'] != null) {
+        throw Exception(body['validation']['message']);
+      }
+
+      throw Exception('Unknown error');
     }
   }
 
@@ -44,11 +51,12 @@ class DocumentService with RequiresToken {
       throw TokenExpiredException('Token expired');
     }
 
-    final response = await http.get(Uri.parse(pagination.nextPageUrl!),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
+    final response = await http
+        .get(Uri.parse(pagination.nextPageUrl ?? ''), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       return DocumentPagination.fromJson(json.decode(response.body));
@@ -70,11 +78,12 @@ class DocumentService with RequiresToken {
       throw TokenExpiredException('Token expired');
     }
 
-    final response = await http.get(Uri.parse(pagination.prevPageUrl!),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
+    final response = await http
+        .get(Uri.parse(pagination.prevPageUrl ?? ''), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       return DocumentPagination.fromJson(json.decode(response.body));
@@ -91,11 +100,12 @@ class DocumentService with RequiresToken {
       throw TokenExpiredException('Token expired');
     }
 
-    final response = await http.get(Uri.parse('$url/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
+    final response =
+        await http.get(Uri.parse('$url/$id'), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       return Document.fromJson(json.decode(response.body));
@@ -141,6 +151,7 @@ class DocumentService with RequiresToken {
     final response = await http.put(Uri.parse('$url/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token'
         },
         body: jsonEncode(input.toJson()));
@@ -160,11 +171,12 @@ class DocumentService with RequiresToken {
       throw TokenExpiredException('Token expired');
     }
 
-    final response = await http.delete(Uri.parse('$url/$id'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
+    final response =
+        await http.delete(Uri.parse('$url/$id'), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       return;

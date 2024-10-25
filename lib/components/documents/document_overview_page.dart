@@ -1,8 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:organize_ai_app/components/documents/document_controller.dart';
 import 'package:organize_ai_app/components/documents/document_creation_form.dart';
 import 'package:organize_ai_app/components/documents/document_grid.dart';
+import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
+import 'package:organize_ai_app/models/document.dart';
+import 'package:organize_ai_app/models/document_pagination.dart';
+import 'package:organize_ai_app/screens/login/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class DocumentOverviewPage extends StatefulWidget {
   const DocumentOverviewPage({super.key});
@@ -13,28 +19,64 @@ class DocumentOverviewPage extends StatefulWidget {
 
 class DocumentOverviewState extends State<DocumentOverviewPage> {
   bool _isLoading = true;
-
   bool _createDocumentButtonTapped = false;
 
-  // Dummy data
-  final List<Map<String, String>> _documents = [
-    {'name': 'Document 1', 'type': 'pdf'},
-    {'name': 'Document 2', 'type': 'pdf'},
-    {'name': 'Document 3', 'type': 'jpeg'},
-    {'name': 'Document 4', 'type': 'jpg'},
-    {'name': 'Document 5', 'type': 'docx'},
-  ];
+  late DocumentController documentController;
+  late List<Document> documents = [];
+
+  late String? nextPageUrl;
+  late String? prevPageUrl;
+  late String? firstPageUrl;
+  late String? lastPageUrl;
+
+  late int currentPage;
+  late int lastPage;
 
   @override
   void initState() {
     super.initState();
 
-    // TODO: Perform document and user get
-    Future.delayed(const Duration(seconds: 2), () {
+    documentController =
+        Provider.of<DocumentController>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchDocuments();
+    });
+  }
+
+  Future<void> _fetchDocuments() async {
+    try {
+      DocumentPagination pagination = await documentController.getDocuments();
+
+      if (!mounted) return;
+
+      setState(() {
+        documents = pagination.data;
+
+        nextPageUrl = pagination.nextPageUrl;
+        prevPageUrl = pagination.prevPageUrl;
+        firstPageUrl = pagination.firstPageUrl;
+        lastPageUrl = pagination.lastPageUrl;
+        currentPage = pagination.currentPage;
+        lastPage = pagination.lastPage;
+
+        _isLoading = false;
+      });
+    } on TokenExpiredException catch (_) {
+      if (!mounted) return;
+
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar documentos: $e')),
+      );
+    } finally {
       setState(() {
         _isLoading = false;
       });
-    });
+    }
   }
 
   @override
@@ -58,7 +100,7 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
                         ),
                       ),
                     ),
-                    Expanded(child: DocumentGrid(documents: _documents)),
+                    Expanded(child: DocumentGrid(documents: documents)),
                   ],
                 ),
           Positioned(

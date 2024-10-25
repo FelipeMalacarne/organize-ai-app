@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:organize_ai_app/models/document.dart';
 
 class DocumentTile extends StatefulWidget {
-  final Map<String, String> document;
+  final Document document;
 
   const DocumentTile({super.key, required this.document});
 
@@ -33,7 +34,7 @@ class DocumentTileState extends State<DocumentTile> {
     double iconSize = 60.0;
     Color iconColor = theme.colorScheme.surfaceContainerHighest;
 
-    switch (widget.document['type']) {
+    switch (widget.document.fileType) {
       case 'pdf':
         icon = Icon(
           Icons.picture_as_pdf,
@@ -72,8 +73,7 @@ class DocumentTileState extends State<DocumentTile> {
           children: [
             icon,
             const SizedBox(height: 20),
-            Text(widget.document['name']!,
-                style: const TextStyle(fontSize: 16)),
+            Text(widget.document.title, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),

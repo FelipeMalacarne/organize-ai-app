@@ -8,8 +8,8 @@ class DocumentPagination {
   String? prevPageUrl;
   String? nextPageUrl;
 
-  int? currentPage;
-  int? lastPage;
+  int currentPage;
+  int lastPage;
 
   DocumentPagination({
     required this.data,
@@ -17,8 +17,8 @@ class DocumentPagination {
     this.lastPageUrl,
     this.prevPageUrl,
     this.nextPageUrl,
-    this.currentPage,
-    this.lastPage,
+    required this.currentPage,
+    required this.lastPage,
   });
 
   DocumentPagination.fromJson(Map<String, dynamic> json)
