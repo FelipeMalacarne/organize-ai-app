@@ -161,8 +161,10 @@ class DocumentService with RequiresToken {
         },
         body: jsonEncode(input.toJson()));
 
+    final body = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      return Document.fromJson(json.decode(response.body));
+      return Document.fromJson(body['data']);
     } else if (response.statusCode == 401) {
       throw TokenExpiredException('Token expired');
     } else {

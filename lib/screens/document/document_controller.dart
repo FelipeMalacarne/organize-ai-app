@@ -89,16 +89,12 @@ class DocumentController extends ChangeNotifier {
     }
   }
 
-  Future<void> updateDocument(String id, UpdateDocumentInput input) async {
+  Future<Document> updateDocument(String id, UpdateDocumentInput input) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final updatedDocument = await _documentService.update(id, input);
-      final index = _documents.indexWhere((doc) => doc.id == id);
-      if (index != -1) {
-        _documents[index] = updatedDocument;
-      }
+      return await _documentService.update(id, input);
     } catch (e) {
       _errorMessage = e.toString();
       rethrow;

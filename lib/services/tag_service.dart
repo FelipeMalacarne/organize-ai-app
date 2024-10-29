@@ -6,7 +6,7 @@ import 'package:organize_ai_app/mixins/requires_token.dart';
 import 'package:organize_ai_app/models/tag_pagination.dart';
 
 class TagService with RequiresToken {
-  String url = '${Config.apiUrl}/tag';
+  String url = '${Config.apiUrl}/tags';
 
   Future<TagPagination> get({int limit = 40, int page = 1}) async {
     final token = await getToken();

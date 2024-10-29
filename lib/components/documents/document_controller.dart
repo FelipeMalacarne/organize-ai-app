@@ -101,7 +101,7 @@ class DocumentController with ChangeNotifier {
   }
 
   Future<void> updateDocument(
-      String id, String title, List<String> tags, String filePath) async {
+      String id, String title, List<Tag> tags, String filePath) async {
     final documentInput = UpdateDocumentInput(
       title: title,
       tags: tags,

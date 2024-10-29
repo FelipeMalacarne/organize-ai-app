@@ -11,18 +11,22 @@ import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class DocumentDetailsDialog extends StatefulWidget {
+  final bool isLoading;
   final Document document;
   final Function(String, List<Tag>) onSubmit;
 
   const DocumentDetailsDialog(
-      {super.key, required this.document, required this.onSubmit});
+      {super.key,
+      required this.document,
+      required this.onSubmit,
+      required this.isLoading});
 
   @override
   DocumentDetailsDialogState createState() => DocumentDetailsDialogState();
 }
 
 class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
-  bool _isLoading = true;
+  bool _areTagsLoading = true;
 
   late TextEditingController _titleController;
 
@@ -38,7 +42,9 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
 
     _selectedTags.addAll(widget.document.tags);
 
-    _fetchTags();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchTags();
+    });
   }
 
   Future<void> _fetchTags() async {
@@ -64,7 +70,7 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
       }
     } finally {
       setState(() {
-        _isLoading = false;
+        _areTagsLoading = false;
       });
     }
   }
@@ -80,7 +86,7 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
     return Scaffold(
         body: Stack(
       children: [
-        _isLoading
+        widget.isLoading
             ? const Center(child: CircularProgressIndicator())
             : Dialog(
                 shape: RoundedRectangleBorder(
@@ -101,7 +107,7 @@ class DocumentDetailsDialogState extends State<DocumentDetailsDialog> {
                       ),
                       const SizedBox(height: 16),
                       TagsSelector(
-                        isLoading: _isLoading,
+                        isLoading: _areTagsLoading,
                         availableTags: _availableTags,
                         selectedTags: _selectedTags,
                         onTagSelected: (tag) {

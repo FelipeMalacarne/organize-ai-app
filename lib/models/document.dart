@@ -22,6 +22,12 @@ class Document {
     tags = (json['tags'] as List<dynamic>)
         .map((tag) => Tag.fromJson(tag))
         .toList();
-    metadata = json['metadata'] ?? [];
+    if (json['metadata'] is List) {
+      metadata = json['metadata'] as List<dynamic>;
+    } else if (json['metadata'] is Map) {
+      metadata = [json['metadata']];
+    } else {
+      metadata = [];
+    }
   }
 }

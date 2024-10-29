@@ -70,6 +70,7 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
           MaterialPageRoute(builder: (context) => const LoginScreen()));
     } catch (e) {
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao carregar documentos: $e')),
       );

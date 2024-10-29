@@ -1,22 +1,34 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/documents/document_details_dialog.dart';
+import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
+import 'package:organize_ai_app/models/tag.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
 
 class DocumentTile extends StatefulWidget {
-  Document document;
+  final Document document;
 
-  late DocumentController documentController;
-
-  DocumentTile({super.key, required this.document});
+  const DocumentTile({super.key, required this.document});
 
   @override
   DocumentTileState createState() => DocumentTileState();
 }
 
 class DocumentTileState extends State<DocumentTile> {
+  late Document document;
+  late DocumentController documentController;
   bool _tapped = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    document = widget.document;
+
+    documentController = DocumentController();
+  }
 
   void _handleTap() {
     setState(() {
@@ -36,11 +48,13 @@ class DocumentTileState extends State<DocumentTile> {
       context: context,
       builder: (BuildContext context) {
         return DocumentDetailsDialog(
-          document: widget.document,
-          onSubmit: (updatedTitle, updatedTags) {
+          isLoading: _isLoading,
+          document: document,
+          onSubmit: (updatedTitle, updatedTags) async {
+            Document updatedDocument =
+                await _updateDocument(updatedTitle, updatedTags);
             setState(() {
-              widget.document.title = updatedTitle;
-              widget.document.tags = updatedTags;
+              document = updatedDocument;
             });
           },
         );
@@ -48,24 +62,29 @@ class DocumentTileState extends State<DocumentTile> {
     );
   }
 
-  // Future<Document> _updateDocument(String title, List<String> tags) async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
+  Future<Document> _updateDocument(String title, List<Tag> tags) async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  //   try {
-  //     return await documentController.createDocument(title, tags, filePath);
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Failed to create document: $e')),
-  //     );
-  //     rethrow;
-  //   } finally {
-  //     setState(() {
-  //       _isLoading = false;
-  //     });
-  //   }
-  // }
+    UpdateDocumentInput input = UpdateDocumentInput(
+      title: title,
+      tags: tags,
+    );
+
+    try {
+      return await documentController.updateDocument(document.id, input);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao atualizar documento: $e')),
+      );
+      return document;
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +94,7 @@ class DocumentTileState extends State<DocumentTile> {
     double iconSize = 60.0;
     Color iconColor = theme.colorScheme.surfaceContainerHighest;
 
-    switch (widget.document.fileType) {
+    switch (document.fileType) {
       case 'pdf':
         icon = Icon(
           Icons.picture_as_pdf,
@@ -114,7 +133,7 @@ class DocumentTileState extends State<DocumentTile> {
           children: [
             icon,
             const SizedBox(height: 20),
-            Text(widget.document.title, style: const TextStyle(fontSize: 16)),
+            Text(document.title, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),

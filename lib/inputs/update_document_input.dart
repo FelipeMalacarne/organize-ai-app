@@ -1,6 +1,8 @@
+import 'package:organize_ai_app/models/tag.dart';
+
 class UpdateDocumentInput {
   final String title;
-  final List<String> tags;
+  final List<Tag> tags;
 
   UpdateDocumentInput({
     required this.title,
@@ -10,7 +12,7 @@ class UpdateDocumentInput {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'tags': tags,
+      'tags': tags.map((tag) => tag.name).toList(),
     };
   }
 }
