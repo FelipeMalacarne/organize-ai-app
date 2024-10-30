@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:organize_ai_app/components/documents/document_details_dialog.dart';
 import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/tag.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
+import 'package:organize_ai_app/screens/document/document_details_screen.dart';
+import 'package:provider/provider.dart';
 
 class DocumentTile extends StatefulWidget {
   final Document document;
@@ -27,7 +28,8 @@ class DocumentTileState extends State<DocumentTile> {
 
     document = widget.document;
 
-    documentController = DocumentController();
+    documentController =
+        Provider.of<DocumentController>(context, listen: false);
   }
 
   void _handleTap() {
@@ -39,15 +41,15 @@ class DocumentTileState extends State<DocumentTile> {
       setState(() {
         _tapped = false;
       });
-      _showDocumentDialog(context);
+      _showDocumentScreen(context);
     });
   }
 
-  void _showDocumentDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DocumentDetailsDialog(
+  void _showDocumentScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DocumentDetailsScreen(
           isLoading: _isLoading,
           document: document,
           onSubmit: (updatedTitle, updatedTags) async {
@@ -57,8 +59,8 @@ class DocumentTileState extends State<DocumentTile> {
               document = updatedDocument;
             });
           },
-        );
-      },
+        ),
+      ),
     );
   }
 

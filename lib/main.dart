@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:organize_ai_app/components/documents/document_controller.dart';
+import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/components/tags/tag_controller.dart';
 import 'package:organize_ai_app/config/dark_theme.dart';
 import 'package:organize_ai_app/config/light_theme.dart';

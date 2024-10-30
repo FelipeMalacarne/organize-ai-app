@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:organize_ai_app/components/documents/document_controller.dart';
+import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/components/documents/document_creation_form.dart';
 import 'package:organize_ai_app/components/documents/document_grid.dart';
 import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';

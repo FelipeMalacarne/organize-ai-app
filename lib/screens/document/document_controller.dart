@@ -100,19 +100,13 @@ class DocumentController with ChangeNotifier {
     }
   }
 
-  Future<void> updateDocument(
-      String id, String title, List<Tag> tags, String filePath) async {
-    final documentInput = UpdateDocumentInput(
-      title: title,
-      tags: tags,
-    );
-
+  Future<Document> updateDocument(String id, UpdateDocumentInput input) async {
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
 
     try {
-      await documentService.update(id, documentInput);
+      return await documentService.update(id, input);
     } catch (error) {
       rethrow;
     } finally {
