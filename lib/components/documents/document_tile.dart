@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/models/document.dart';
-import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/screens/document/detailed_document_screen.dart';
+import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:provider/provider.dart';
 
 class DocumentTile extends StatefulWidget {
