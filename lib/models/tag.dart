@@ -11,4 +11,12 @@ class Tag {
     id = json['id'];
     name = json['name'];
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Tag && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

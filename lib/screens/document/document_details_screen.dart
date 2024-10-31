@@ -75,6 +75,20 @@ class DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
     }
   }
 
+  bool isTagSelected(Tag tag) {
+    return _selectedTags.any((selectedTag) => selectedTag.id == tag.id);
+  }
+
+  void _onTagSelected(Tag tag) {
+    setState(() {
+      if (_selectedTags.contains(tag)) {
+        _selectedTags.remove(tag);
+      } else {
+        _selectedTags.add(tag);
+      }
+    });
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -105,15 +119,7 @@ class DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
                     isLoading: _areTagsLoading,
                     availableTags: _availableTags,
                     selectedTags: _selectedTags,
-                    onTagSelected: (tag) {
-                      setState(() {
-                        if (_selectedTags.contains(tag)) {
-                          _selectedTags.remove(tag);
-                        } else {
-                          _selectedTags.add(tag);
-                        }
-                      });
-                    },
+                    onTagSelected: _onTagSelected,
                   ),
                   const SizedBox(height: 16),
                   Text("File Type: ${widget.document.fileType}"),
