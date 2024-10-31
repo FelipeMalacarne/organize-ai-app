@@ -16,6 +16,7 @@ class UserService with RequiresToken {
 
     final response = await http.get(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
 

@@ -8,6 +8,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'email': email,
@@ -34,6 +35,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/register'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'name': name,
@@ -57,6 +59,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/logout'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     );
   }

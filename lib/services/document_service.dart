@@ -126,6 +126,7 @@ class DocumentService with RequiresToken {
       ..fields.addAll(
           input.toJson().map((key, value) => MapEntry(key, value.toString())))
       ..headers['Authorization'] = 'Bearer $token'
+      ..headers['Accept'] = 'application/json'
       ..files.add(await http.MultipartFile.fromPath(
           'document', input.getFilePath(),
           filename: path.basename(input.getFilePath())));
