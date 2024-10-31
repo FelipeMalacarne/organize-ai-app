@@ -10,22 +10,22 @@ import 'package:organize_ai_app/models/tag_pagination.dart';
 import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
-class DocumentDetailsScreen extends StatefulWidget {
+class UpdateDocumentScreen extends StatefulWidget {
   final bool isLoading;
   final Document document;
   final Function(String, List<Tag>) onSubmit;
 
-  const DocumentDetailsScreen(
+  const UpdateDocumentScreen(
       {super.key,
       required this.document,
       required this.onSubmit,
       required this.isLoading});
 
   @override
-  DocumentDetailsScreenState createState() => DocumentDetailsScreenState();
+  UpdateDocumentScreenState createState() => UpdateDocumentScreenState();
 }
 
-class DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
+class UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
   bool _areTagsLoading = true;
 
   late TextEditingController _titleController;
@@ -99,7 +99,7 @@ class DocumentDetailsScreenState extends State<DocumentDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Detalhes do documento"),
+        title: const Text("Atualizar documento"),
       ),
       body: widget.isLoading
           ? const Center(child: CircularProgressIndicator())

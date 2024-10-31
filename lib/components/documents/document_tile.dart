@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
-import 'package:organize_ai_app/models/tag.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
-import 'package:organize_ai_app/screens/document/document_details_screen.dart';
+import 'package:organize_ai_app/screens/document/detailed_document_screen.dart';
 import 'package:provider/provider.dart';
 
 class DocumentTile extends StatefulWidget {
@@ -20,7 +18,6 @@ class DocumentTileState extends State<DocumentTile> {
   late Document document;
   late DocumentController documentController;
   bool _tapped = false;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -49,43 +46,11 @@ class DocumentTileState extends State<DocumentTile> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DocumentDetailsScreen(
-          isLoading: _isLoading,
+        builder: (context) => DetailedDocumentScreen(
           document: document,
-          onSubmit: (updatedTitle, updatedTags) async {
-            Document updatedDocument =
-                await _updateDocument(updatedTitle, updatedTags);
-            setState(() {
-              document = updatedDocument;
-            });
-          },
         ),
       ),
     );
-  }
-
-  Future<Document> _updateDocument(String title, List<Tag> tags) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    UpdateDocumentInput input = UpdateDocumentInput(
-      title: title,
-      tags: tags,
-    );
-
-    try {
-      return await documentController.updateDocument(document.id, input);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao atualizar documento: $e')),
-      );
-      return document;
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   @override
