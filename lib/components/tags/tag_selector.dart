@@ -35,6 +35,8 @@ class TagsSelector extends StatelessWidget {
       ...unselectedTagsList.sublist((unselectedTagsList.length / 2).ceil())
     ];
 
+    final theme = Theme.of(context);
+
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : Container(
@@ -50,6 +52,7 @@ class TagsSelector extends StatelessWidget {
                       final isSelected = isTagSelected(tag);
                       return ChoiceChip(
                         label: Text(tag.name),
+                        selectedColor: theme.primaryColor,
                         selected: isSelected,
                         onSelected: (_) => onTagSelected(tag),
                       );
@@ -62,6 +65,7 @@ class TagsSelector extends StatelessWidget {
                       final isSelected = isTagSelected(tag);
                       return ChoiceChip(
                         label: Text(tag.name),
+                        selectedColor: theme.primaryColor,
                         selected: isSelected,
                         onSelected: (_) => onTagSelected(tag),
                       );
