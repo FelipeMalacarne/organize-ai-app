@@ -40,11 +40,13 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
           isLoading: _isLoading,
           document: document,
           onSubmit: (updatedTitle, updatedTags) async {
+            _isLoading = true;
             Document updatedDocument =
                 await _updateDocument(updatedTitle, updatedTags);
             setState(() {
               document = updatedDocument;
             });
+            _isLoading = false;
           },
         ),
       ),
@@ -98,72 +100,74 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Title: ${document.title}",
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              "File Type: ${document.fileType}",
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              "Tags:",
-            ),
-            const SizedBox(height: 8.0),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: document.tags.map((tag) {
-                return Chip(
-                  label: Text(tag.name),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              "Metadata:",
-            ),
-            const SizedBox(height: 8.0),
-            document.metadata.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: document.metadata.map((meta) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 4.0),
-                        child: Text(
-                          meta.toString(),
-                        ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Title: ${document.title}",
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    "File Type: ${document.fileType}",
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    "Tags:",
+                  ),
+                  const SizedBox(height: 8.0),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: document.tags.map((tag) {
+                      return Chip(
+                        label: Text(tag.name),
                       );
                     }).toList(),
-                  )
-                : const Text(
-                    "No metadata available.",
                   ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DestructiveButton(
-                  text: "Excluir",
-                  onPressed: () {
-                    _deleteDocument();
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    "Metadata:",
+                  ),
+                  const SizedBox(height: 8.0),
+                  document.metadata.isNotEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: document.metadata.map((meta) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text(
+                                meta.toString(),
+                              ),
+                            );
+                          }).toList(),
+                        )
+                      : const Text(
+                          "No metadata available.",
+                        ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DestructiveButton(
+                        text: "Excluir",
+                        onPressed: () {
+                          _deleteDocument();
 
-                    Navigator.pop(context);
-                  },
-                ),
-                DefaultButton(
-                  text: "Editar",
-                  onPressed: () {
-                    _showUpdateDocumentScreen(context);
-                  },
-                )
-              ],
-            )
-          ],
-        ),
+                          Navigator.pop(context);
+                        },
+                      ),
+                      DefaultButton(
+                        text: "Editar",
+                        onPressed: () {
+                          _showUpdateDocumentScreen(context);
+                        },
+                      )
+                    ],
+                  )
+                ],
+              ),
       ),
     );
   }

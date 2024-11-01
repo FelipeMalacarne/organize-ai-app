@@ -138,6 +138,7 @@ class UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                         text: "Salvar",
                         onPressed: () {
                           widget.onSubmit(_titleController.text, _selectedTags);
+                          Navigator.pop(context);
                         },
                       ),
                     ],
