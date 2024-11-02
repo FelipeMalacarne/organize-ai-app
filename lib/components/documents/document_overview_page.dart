@@ -142,20 +142,23 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
         children: [
           _isLoading
               ? const Center(child: CircularProgressIndicator())
-              : Column(
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          'Documentos',
-                          style: TextStyle(fontSize: 24.0),
+              : RefreshIndicator(
+                  onRefresh: _fetchDocuments,
+                  child: Column(
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'Documentos',
+                            style: TextStyle(fontSize: 24.0),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(child: DocumentGrid(documents: documents)),
-                  ],
+                      Expanded(child: DocumentGrid(documents: documents)),
+                    ],
+                  ),
                 ),
           Positioned(
             bottom: 16,

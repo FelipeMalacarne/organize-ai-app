@@ -1,3 +1,4 @@
+import 'package:organize_ai_app/models/extraction.dart';
 import 'package:organize_ai_app/models/tag.dart';
 
 class Document {
@@ -6,6 +7,7 @@ class Document {
   late String fileType;
 
   late List<Tag> tags;
+  late List<Extraction> extractions;
   late List<dynamic> metadata;
 
   Document({
@@ -28,6 +30,14 @@ class Document {
       metadata = [json['metadata']];
     } else {
       metadata = [];
+    }
+    if (json['extractions'] is List) {
+      extractions = (json['extractions'] as List<dynamic>)
+          .map((extraction) =>
+              Extraction.fromJson(extraction as Map<String, dynamic>))
+          .toList();
+    } else {
+      extractions = [];
     }
   }
 }
