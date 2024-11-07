@@ -1,3 +1,7 @@
+import 'package:http/http.dart' as http;
+import 'package:organize_ai_app/config/config.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:organize_ai_app/models/extraction.dart';
 import 'package:organize_ai_app/models/tag.dart';
 
@@ -38,6 +42,26 @@ class Document {
           .toList();
     } else {
       extractions = [];
+    }
+  }
+
+  Future<String> download() async {
+    String url = '${Config.apiUrl}/document';
+
+    final response = await http.get(Uri.parse('$url/$id/download'));
+
+    if (response.statusCode == 200) {
+      final directory = await getExternalStorageDirectory();
+      final downloadsDirectory = Directory('${directory!.path}/Download');
+      if (!await downloadsDirectory.exists()) {
+        await downloadsDirectory.create(recursive: true);
+      }
+      final filePath = '${downloadsDirectory.path}/document_$id.pdf';
+      final file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      return filePath;
+    } else {
+      throw Exception('Failed to download document: ${response.statusCode}');
     }
   }
 }

@@ -18,6 +18,8 @@ dependencies:
   catppuccin_flutter: ^1.0.0
   path: ^1.8.0
   file_picker: ^5.2.2
+  path_provider: ^2.0.11
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:
