@@ -1,6 +1,6 @@
-import '../config/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:organize_ai_app/config/config.dart';
 
 class AuthService {
   Future<String> login(String email, String password) async {
@@ -8,6 +8,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'email': email,
@@ -34,6 +35,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/register'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode(<String, String>{
         'name': name,
@@ -57,6 +59,7 @@ class AuthService {
       Uri.parse('${Config.apiUrl}/logout'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     );
   }

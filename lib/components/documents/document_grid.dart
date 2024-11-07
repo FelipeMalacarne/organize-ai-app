@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/documents/document_tile.dart';
+import 'package:organize_ai_app/models/document.dart';
 
 class DocumentGrid extends StatelessWidget {
-  final List<Map<String, String>> documents;
+  final List<Document> documents;
 
   const DocumentGrid({super.key, required this.documents});
 
