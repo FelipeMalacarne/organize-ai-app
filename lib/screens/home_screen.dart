@@ -34,7 +34,7 @@ class HomeScreenState extends State<HomeScreen> {
       drawer: const SideDrawer(),
       body: Builder(
         builder: (BuildContext context) {
-          return DocumentOverviewPage();
+          return const DocumentOverviewPage();
         },
       ),
     );

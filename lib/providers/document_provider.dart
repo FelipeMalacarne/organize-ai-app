@@ -28,6 +28,11 @@ class DocumentProvider with ChangeNotifier {
 
   DocumentProvider(this.documentService);
 
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   Future<void> fetchDocuments({String? search}) async {
     _isLoading = true;
     notifyListeners();

@@ -15,7 +15,6 @@ class DocumentOverviewPage extends StatefulWidget {
 }
 
 class DocumentOverviewState extends State<DocumentOverviewPage> {
-  bool _isLoading = true;
   bool _createDocumentButtonTapped = false;
 
   @override
@@ -37,12 +36,6 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $error')),
         );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
   }
@@ -97,7 +90,7 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
     return Scaffold(
       body: Stack(
         children: [
-          _isLoading
+          documentProvider.isLoading
               ? const Center(child: CircularProgressIndicator())
               : RefreshIndicator(
                   onRefresh: _fetchDocuments,
