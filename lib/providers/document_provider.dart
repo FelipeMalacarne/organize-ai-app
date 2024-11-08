@@ -72,4 +72,20 @@ class DocumentProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> deleteDocument(String id) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await documentService.delete(id);
+      _documents.removeWhere((document) => document.id == id);
+    } catch (error) {
+      _errorMessage = error.toString();
+      notifyListeners();
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

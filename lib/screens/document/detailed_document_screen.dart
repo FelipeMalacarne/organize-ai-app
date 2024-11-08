@@ -6,6 +6,7 @@ import 'package:organize_ai_app/components/documents/document_extractions.dart';
 import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/tag.dart';
+import 'package:organize_ai_app/providers/document_provider.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/screens/document/update_document_screen.dart';
 import 'package:provider/provider.dart';
@@ -81,12 +82,11 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
 
   Future<void> _deleteDocument() async {
     try {
-      await documentController.deleteDocument(document.id);
+      final documentProvider =
+          Provider.of<DocumentProvider>(context, listen: false);
+      await documentProvider.deleteDocument(document.id);
       if (mounted) {
         Navigator.pop(context);
-
-        // @TODO: Implement this method
-        // await _fetchDocuments();
       }
     } catch (e) {
       if (mounted) {
