@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:organize_ai_app/providers/document_provider.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/components/tags/tag_controller.dart';
 import 'package:organize_ai_app/config/dark_theme.dart';
@@ -42,6 +43,9 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserController(UserService())),
         ChangeNotifierProvider(
             create: (_) => DocumentController(DocumentService())),
+        ChangeNotifierProvider(
+          create: (_) => DocumentProvider(DocumentService()),
+        ),
         ChangeNotifierProvider(create: (_) => TagController(TagService())),
       ],
       child: Consumer<ThemeProvider>(

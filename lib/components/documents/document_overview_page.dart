@@ -1,20 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:organize_ai_app/screens/document/document_controller.dart';
+import 'package:organize_ai_app/providers/document_provider.dart';
 import 'package:organize_ai_app/components/documents/document_creation_form.dart';
 import 'package:organize_ai_app/components/documents/document_grid.dart';
-import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
 import 'package:organize_ai_app/models/document.dart';
-import 'package:organize_ai_app/models/document_pagination.dart';
 import 'package:organize_ai_app/models/tag.dart';
-import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class DocumentOverviewPage extends StatefulWidget {
-  final String searchQuery;
-
-  const DocumentOverviewPage({super.key, required this.searchQuery});
+  const DocumentOverviewPage({super.key});
 
   @override
   DocumentOverviewState createState() => DocumentOverviewState();
@@ -24,23 +18,9 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
   bool _isLoading = true;
   bool _createDocumentButtonTapped = false;
 
-  late DocumentController documentController;
-  late List<Document> documents = [];
-
-  late String? nextPageUrl;
-  late String? prevPageUrl;
-  late String? firstPageUrl;
-  late String? lastPageUrl;
-
-  late int currentPage;
-  late int lastPage;
-
   @override
   void initState() {
     super.initState();
-
-    documentController =
-        Provider.of<DocumentController>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchDocuments();
@@ -48,59 +28,22 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
   }
 
   Future<void> _fetchDocuments() async {
+    final documentProvider =
+        Provider.of<DocumentProvider>(context, listen: false);
     try {
-      DocumentPagination pagination =
-          await documentController.getDocuments(search: widget.searchQuery);
-
-      if (!mounted) return;
-
-      setState(() {
-        documents = pagination.data;
-
-        nextPageUrl = pagination.nextPageUrl;
-        prevPageUrl = pagination.prevPageUrl;
-        firstPageUrl = pagination.firstPageUrl;
-        lastPageUrl = pagination.lastPageUrl;
-        currentPage = pagination.currentPage;
-        lastPage = pagination.lastPage;
-
-        _isLoading = false;
-      });
-    } on TokenExpiredException catch (_) {
-      if (!mounted) return;
-
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar documentos: $e')),
-      );
+      await documentProvider.fetchDocuments();
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $error')),
+        );
+      }
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<Document> _createDocument(
-      String title, List<Tag> tags, String filePath) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      return await documentController.createDocument(title, tags, filePath);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create document: $e')),
-      );
-      rethrow;
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -124,10 +67,12 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
           onSubmit:
               (String documentTitle, List<Tag> tags, String? filePath) async {
             if (filePath != null) {
-              Document document =
-                  await _createDocument(documentTitle, tags, filePath);
+              final documentProvider =
+                  Provider.of<DocumentProvider>(context, listen: false);
+              Document document = await documentProvider.createDocument(
+                  documentTitle, tags, filePath);
               setState(() {
-                documents.insert(0, document);
+                documentProvider.documents.insert(0, document);
               });
             }
           },
@@ -138,7 +83,16 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final documentProvider = Provider.of<DocumentProvider>(context);
     final theme = Theme.of(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (documentProvider.errorMessage.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${documentProvider.errorMessage}')),
+        );
+      }
+    });
 
     return Scaffold(
       body: Stack(
@@ -159,7 +113,9 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
                           ),
                         ),
                       ),
-                      Expanded(child: DocumentGrid(documents: documents)),
+                      Expanded(
+                          child: DocumentGrid(
+                              documents: documentProvider.documents)),
                     ],
                   ),
                 ),
