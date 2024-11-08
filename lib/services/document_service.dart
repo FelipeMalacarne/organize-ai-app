@@ -13,18 +13,25 @@ import 'package:path/path.dart' as path;
 class DocumentService with RequiresToken {
   String url = '${Config.apiUrl}/document';
 
-  Future<DocumentPagination> get({int limit = 20, int page = 1}) async {
+  Future<DocumentPagination> get(
+      {int limit = 20, int page = 1, String search = ''}) async {
     final token = await getToken();
     if (token == null) {
       throw TokenExpiredException('Token expired');
     }
 
-    final response = await http.get(Uri.parse('$url?limit=$limit&page=$page'),
-        headers: <String, String>{
-          'Content-Type': 'application',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        });
+    String uriString = '$url?limit=$limit&page=$page';
+
+    if (search.isNotEmpty) {
+      uriString += '&title=$search';
+    }
+
+    final response =
+        await http.get(Uri.parse(uriString), headers: <String, String>{
+      'Content-Type': 'application',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
     if (response.statusCode == 200) {
       return DocumentPagination.fromJson(json.decode(response.body));

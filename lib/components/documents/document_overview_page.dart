@@ -12,7 +12,9 @@ import 'package:organize_ai_app/screens/login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class DocumentOverviewPage extends StatefulWidget {
-  const DocumentOverviewPage({super.key});
+  final String searchQuery;
+
+  const DocumentOverviewPage({super.key, required this.searchQuery});
 
   @override
   DocumentOverviewState createState() => DocumentOverviewState();
@@ -47,7 +49,8 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
 
   Future<void> _fetchDocuments() async {
     try {
-      DocumentPagination pagination = await documentController.getDocuments();
+      DocumentPagination pagination =
+          await documentController.getDocuments(search: widget.searchQuery);
 
       if (!mounted) return;
 
