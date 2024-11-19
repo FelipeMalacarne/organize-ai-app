@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:organize_ai_app/config/config.dart';
+import 'package:organize_ai_app/mixins/requires_token.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:organize_ai_app/models/extraction.dart';
 import 'package:organize_ai_app/models/tag.dart';
 
-class Document {
+class Document with RequiresToken {
   late String id;
   late String title;
   late String fileType;
@@ -47,8 +48,22 @@ class Document {
 
   Future<String> download() async {
     String url = '${Config.apiUrl}/document';
+    final token = await getToken();
 
-    final response = await http.get(Uri.parse('$url/$id/download'));
+    final urlResponse = await http
+        .get(Uri.parse('$url/$id/download'), headers: <String, String>{
+      'Content-Type': 'application',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+
+    if (urlResponse.statusCode != 200) {
+      throw Exception('Failed to get download URL: ${urlResponse.statusCode}');
+    }
+
+    print(urlResponse.body);
+
+    final response = await http.get(Uri.parse(urlResponse.body));
 
     if (response.statusCode == 200) {
       final directory = await getExternalStorageDirectory();
@@ -56,7 +71,7 @@ class Document {
       if (!await downloadsDirectory.exists()) {
         await downloadsDirectory.create(recursive: true);
       }
-      final filePath = '${downloadsDirectory.path}/document_$id.pdf';
+      final filePath = '${downloadsDirectory.path}/document_$id.$fileType';
       final file = File(filePath);
       await file.writeAsBytes(response.bodyBytes);
       return filePath;

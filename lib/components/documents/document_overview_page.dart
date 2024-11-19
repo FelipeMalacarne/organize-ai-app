@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:organize_ai_app/providers/document_provider.dart';
 import 'package:organize_ai_app/components/documents/document_creation_form.dart';
 import 'package:organize_ai_app/components/documents/document_grid.dart';
-import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/tag.dart';
 import 'package:provider/provider.dart';
 
@@ -62,11 +61,8 @@ class DocumentOverviewState extends State<DocumentOverviewPage> {
             if (filePath != null) {
               final documentProvider =
                   Provider.of<DocumentProvider>(context, listen: false);
-              Document document = await documentProvider.createDocument(
+              await documentProvider.createDocument(
                   documentTitle, tags, filePath);
-              setState(() {
-                documentProvider.documents.insert(0, document);
-              });
             }
           },
         );
