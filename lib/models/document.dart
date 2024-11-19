@@ -61,8 +61,6 @@ class Document with RequiresToken {
       throw Exception('Failed to get download URL: ${urlResponse.statusCode}');
     }
 
-    print(urlResponse.body);
-
     final response = await http.get(Uri.parse(urlResponse.body));
 
     if (response.statusCode == 200) {

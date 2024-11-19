@@ -106,20 +106,18 @@ class DocumentCreationFormState extends State<DocumentCreationForm> {
               },
             ),
             const SizedBox(height: 16),
-            Row(
+            Column(
               children: [
                 ElevatedButton(
                   onPressed: _pickFile,
                   child: const Text('Selecionar arquivo'),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    _selectedFilePath != null
-                        ? _selectedFilePath!
-                        : 'Nenhum arquivo selecionado',
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                const SizedBox(height: 8),
+                Text(
+                  _selectedFilePath != null
+                      ? _selectedFilePath!
+                      : 'Nenhum arquivo selecionado',
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
