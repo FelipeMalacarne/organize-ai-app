@@ -17,13 +17,13 @@ class DocumentController with ChangeNotifier {
 
   DocumentController(this.documentService);
 
-  Future<DocumentPagination> getDocuments() async {
+  Future<DocumentPagination> getDocuments({String search = ''}) async {
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
 
     try {
-      return await documentService.get();
+      return await documentService.get(search: search);
     } catch (error) {
       rethrow;
     } finally {

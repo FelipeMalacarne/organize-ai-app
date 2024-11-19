@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
-import 'package:organize_ai_app/components/buttons/destructive_button.dart';
 import 'package:organize_ai_app/components/tags/tag_controller.dart';
 import 'package:organize_ai_app/components/tags/tag_selector.dart';
 import 'package:organize_ai_app/exceptions/token_invalid_exception.dart';
@@ -124,24 +123,14 @@ class UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                   const SizedBox(height: 16),
                   Text("File Type: ${widget.document.fileType}"),
                   const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      DestructiveButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        text: 'Cancelar',
-                      ),
-                      const SizedBox(width: 8),
-                      DefaultButton(
-                        text: "Salvar",
-                        onPressed: () {
-                          widget.onSubmit(_titleController.text, _selectedTags);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                  Center(
+                    child: DefaultButton(
+                      text: "Salvar",
+                      onPressed: () {
+                        widget.onSubmit(_titleController.text, _selectedTags);
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                 ],
               ),

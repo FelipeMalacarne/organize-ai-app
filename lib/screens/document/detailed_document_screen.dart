@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:organize_ai_app/components/buttons/default_button.dart';
 import 'package:organize_ai_app/components/buttons/destructive_button.dart';
 import 'package:organize_ai_app/components/documents/document_extractions.dart';
 import 'package:organize_ai_app/inputs/update_document_input.dart';
 import 'package:organize_ai_app/models/document.dart';
 import 'package:organize_ai_app/models/tag.dart';
+import 'package:organize_ai_app/providers/document_provider.dart';
 import 'package:organize_ai_app/screens/document/document_controller.dart';
 import 'package:organize_ai_app/screens/document/update_document_screen.dart';
 import 'package:provider/provider.dart';
@@ -80,17 +82,33 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
 
   Future<void> _deleteDocument() async {
     try {
-      await documentController.deleteDocument(document.id);
+      final documentProvider =
+          Provider.of<DocumentProvider>(context, listen: false);
+      await documentProvider.deleteDocument(document.id);
       if (mounted) {
         Navigator.pop(context);
-
-        // @TODO: Implement this method
-        // await _fetchDocuments();
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erro ao excluir documento: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _downloadDocument() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      final filePath = await document.download();
+      if (mounted) {
+        await OpenFile.open(filePath);
+      }
+    } catch (e) {
+      if (mounted) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Erro ao baixar arquivo: $e')),
         );
       }
     }
@@ -109,8 +127,7 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
             : SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize:
-                      MainAxisSize.min, // Prevents expansion beyond screen
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Identificador: ${document.id}",
@@ -119,9 +136,18 @@ class DetailedDocumentScreenState extends State<DetailedDocumentScreen> {
                       "Título: ${document.title}",
                     ),
                     const SizedBox(height: 8.0),
-                    Text(
-                      "Tipo do arquivo: ${document.fileType.toUpperCase()}",
-                    ),
+                    Row(children: [
+                      Text(
+                        "Tipo do arquivo: ${document.fileType.toUpperCase()}",
+                      ),
+                      const Spacer(),
+                      DefaultButton(
+                        text: "Baixar arquivo",
+                        onPressed: () {
+                          _downloadDocument();
+                        },
+                      ),
+                    ]),
                     const SizedBox(height: 8.0),
                     const Text("Tags:"),
                     const SizedBox(height: 8.0),
